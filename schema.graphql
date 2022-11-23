@@ -1,0 +1,29 @@
+type Query {
+  persons: [Person]
+}
+
+type Person {
+  Id: String
+  Nummer: Int
+  Titels: String
+  Initialen: String
+  Tussenvoegsel: String
+  Achternaam: String
+  Voornamen: String
+  Roepnaam: String
+  Geslacht: String
+  Functie: String
+  Geboortedatum: String
+  Geboorteplaats: String
+  Geboorteland: String
+  Overlijdensdatum: String
+  Overlijdensplaats: String
+  Woonplaats: String
+  Land: String
+  Fractielabel: String
+  ContentType: String
+  ContentLength: Int
+  GewijzigdOp: String
+  ApiGewijzigdOp: String
+  Verwijderd: Boolean
+}

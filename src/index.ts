@@ -1,6 +1,7 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { readFileSync, promises } from "fs";
+import { Person } from "./ts/types/Person";
 
 const typeDefs = readFileSync("./schema.graphql", { encoding: "utf-8" });
 
@@ -22,8 +23,32 @@ const getDataInDir = async (dirname) => {
 
 const resolvers = {
   Query: {
-    persons: async () => {
-      return await getDataInDir("./data/person");
+    persons: async (_, { id, geslacht, functie, fractielabel }) => {
+      let users = await getDataInDir("./data/person");
+
+      users = users.filter(
+        (user: Person) => user.Id !== null && user.Achternaam !== null
+      );
+
+      if (id) {
+        users = users.filter((user: Person) => user.Id === id);
+      }
+
+      if (geslacht) {
+        users = users.filter((user: Person) => user.Geslacht === geslacht);
+      }
+
+      if (functie) {
+        users = users.filter((user: Person) => user.Functie === functie);
+      }
+
+      if (fractielabel) {
+        users = users.filter(
+          (user: Person) => user.Fractielabel === fractielabel
+        );
+      }
+
+      return users;
     },
   },
 };

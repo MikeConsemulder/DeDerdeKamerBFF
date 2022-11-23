@@ -1,9 +1,14 @@
 type Query {
-  persons: [Person]
+  persons(
+    id: ID
+    geslacht: String
+    functie: String
+    fractielabel: String
+  ): [Person]
 }
 
 type Person {
-  Id: String
+  Id: ID
   Nummer: Int
   Titels: String
   Initialen: String

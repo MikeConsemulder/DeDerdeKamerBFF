@@ -1,4 +1,4 @@
-export type Person = {
+export type Persoon = {
   Id: string | null;
   Nummer: number | null;
   Titels: string | null;
@@ -24,8 +24,8 @@ export type Person = {
   Verwijderd: boolean | null;
 };
 
-export type PersonResponse = {
+export type PersoonResponse = {
   ["@odata.context"]: string;
-  value: Person[];
+  value: Persoon[];
   ["@odata.nextLink"]: string;
 };

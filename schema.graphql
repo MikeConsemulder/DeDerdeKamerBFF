@@ -1,13 +1,4 @@
-type Query {
-  persons(
-    id: ID
-    geslacht: String
-    functie: String
-    fractielabel: String
-  ): [Person]
-}
-
-type Person {
+type Persoon {
   Id: ID
   Nummer: Int
   Titels: String
@@ -31,4 +22,27 @@ type Person {
   GewijzigdOp: String
   ApiGewijzigdOp: String
   Verwijderd: Boolean
+  PersoonGeschenken: [PersoonGeschenk]
+}
+
+type PersoonGeschenk {
+  Id: ID
+  Omschrijving: String
+  Datum: String
+  Gewicht: Int
+  GewijzigdOp: String
+  ApiGewijzigdOp: String
+  Verwijderd: Boolean
+  Persoon_Id: String
+  Persoon: Persoon
+}
+
+type Query {
+  personen(
+    id: ID
+    geslacht: String
+    functie: String
+    fractielabel: String
+  ): [Persoon]
+  persoonGeschenken: [PersoonGeschenk]
 }

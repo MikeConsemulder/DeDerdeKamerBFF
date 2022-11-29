@@ -23,6 +23,8 @@ type Persoon {
   ApiGewijzigdOp: String
   Verwijderd: Boolean
   PersoonGeschenken: [PersoonGeschenk]
+  PersoonReizen: [PersoonReis]
+  PersoonNevenFuncties: [PersoonNevenFunctie]
 }
 
 type PersoonGeschenk {
@@ -37,6 +39,55 @@ type PersoonGeschenk {
   Persoon: Persoon
 }
 
+type PersoonNevenFunctie {
+  Id: String
+  PersoonId: String
+  Omschrijving: String
+  PeriodeVan: String
+  PeriodeTotEnMet: String
+  IsActief: Boolean
+  VergoedingSoort: String
+  VergoedingToelichting: String
+  Gewicht: Int
+  GewijzigdOp: String
+  ApiGewijzigdOp: String
+  Verwijderd: Boolean
+  Persoon: Persoon
+  PersoonNevenFunctieInkomsten: [PersoonNevenFunctieInkomsten]
+}
+
+type PersoonNevenFunctieInkomsten {
+  Id: String
+  Jaar: String
+  BedragSoort: String
+  BedragVoorvoegsel: String
+  BedragValuta: String
+  Bedrag: String
+  BedragAchtervoegsel: String
+  Frequentie: String
+  FrequentieBeschrijving: String
+  Opmerking: String
+  GewijzigdOp: String
+  ApiGewijzigdOp: String
+  Verwijderd: Boolean
+  Nevenfunctie_Id: String
+  PersoonNevenFunctie: PersoonNevenFunctie
+}
+
+type PersoonReis {
+  Id: ID
+  Doel: String
+  Bestemming: String
+  Van: String
+  TotEnMet: String
+  BetaaldDoor: String
+  Gewicht: Int
+  ApiGewijzigdOp: String
+  Verwijderd: Boolean
+  Persoon_Id: String
+  Persoon: Persoon
+}
+
 type Query {
   personen(
     id: ID
@@ -45,4 +96,7 @@ type Query {
     fractielabel: String
   ): [Persoon]
   persoonGeschenken: [PersoonGeschenk]
+  persoonReizen: [PersoonReis]
+  persoonNevenFuncties: [PersoonNevenFunctie]
+  persoonNevenFunctieInkomsten: [PersoonNevenFunctieInkomsten]
 }

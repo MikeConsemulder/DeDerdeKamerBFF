@@ -1,7 +1,10 @@
-export type PersoonGeschenk = {
+export type PersoonReis = {
   Id: string | null;
-  Omschrijving: string | null;
-  Datum: string | null;
+  Doel: string | null;
+  Bestemming: string | null;
+  Van: string | null;
+  TotEnMet: string | null;
+  BetaaldDoor: string | null;
   Gewicht: number | null;
   GewijzigdOp: string | null;
   ApiGewijzigdOp: string | null;

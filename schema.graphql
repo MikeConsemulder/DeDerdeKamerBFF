@@ -25,6 +25,7 @@ type Persoon {
   PersoonGeschenken: [PersoonGeschenk]
   PersoonReizen: [PersoonReis]
   PersoonNevenFuncties: [PersoonNevenFunctie]
+  FractieZetelsPersoon: [FractieZetelPersoon]
 }
 
 type PersoonGeschenk {
@@ -88,15 +89,55 @@ type PersoonReis {
   Persoon: Persoon
 }
 
+type FractieZetelPersoon {
+  Id: ID
+  FractieZetel_Id: String
+  Persoon_Id: String
+  Functie: String
+  Van: String
+  TotEnMet: String
+  GewijzigdOp: String
+  ApiGewijzigdOp: String
+  Verwijderd: Boolean
+  Persoon: Persoon
+  FractieZetel: FractieZetel
+}
+
+type FractieZetel {
+  Id: ID
+  Gewicht: Int
+  Fractie_Id: String
+  GewijzigdOp: String
+  ApiGewijzigdOp: String
+  Verwijderd: Boolean
+  Fractie: Fractie
+}
+
+type Fractie {
+  Id: ID
+  Nummer: Int
+  Afkorting: String
+  NaamNL: String
+  NaamEN: String
+  AantalZetels: Int
+  AantalStemmen: Int
+  DatumActief: String
+  DatumInactief: String
+  ContentType: String
+  ContentLength: Int
+  GewijzigdOp: String
+  ApiGewijzigdOp: String
+  Verwijderd: Boolean
+  FractieZetel: [FractieZetel]
+}
+
 type Query {
-  personen(
-    id: ID
-    geslacht: String
-    functie: String
-    fractielabel: String
-  ): [Persoon]
+  personen(id: ID, geslacht: String, functie: String): [Persoon]
   persoonGeschenken: [PersoonGeschenk]
   persoonReizen: [PersoonReis]
   persoonNevenFuncties: [PersoonNevenFunctie]
   persoonNevenFunctieInkomsten: [PersoonNevenFunctieInkomsten]
+  fracties: [Fractie]
+  fractieZetels: [FractieZetel]
+  fractieZetelPersonen: [FractieZetelPersoon]
 }

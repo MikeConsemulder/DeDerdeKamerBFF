@@ -6,6 +6,9 @@ import { PersoonGeschenk } from "./ts/types/PersoonGeschenk";
 import { PersoonNevenFunctie } from "./ts/types/PersoonNevenFunctie";
 import { PersoonNevenFunctieInkomsten } from "./ts/types/PersoonNevenFunctieInkomsten";
 import { PersoonReis } from "./ts/types/PersoonReis";
+import { FractieZetelPersoon } from "./ts/types/FractieZetelPersoon";
+import { FractieZetel } from "./ts/types/FractieZetel";
+import { Fractie } from "./ts/types/Fractie";
 
 const init = async () => {
   const typeDefs = readFileSync("./schema.graphql", { encoding: "utf-8" });
@@ -85,11 +88,54 @@ const init = async () => {
     return persoonNevenFunctiesInkomsten;
   };
 
+  const getFractieZetelPersonen = async () => {
+    let fractieZetelPersonen: FractieZetelPersoon[] = [];
+    fractieZetelPersonen = await getDataInDir("./data/fractieZetelPersoon");
+
+    fractieZetelPersonen = fractieZetelPersonen.filter(
+      (fractieZetelPersoon: FractieZetelPersoon) =>
+        fractieZetelPersoon.Id !== null &&
+        fractieZetelPersoon.Persoon_Id !== null &&
+        fractieZetelPersoon.FractieZetel_Id !== null
+    );
+
+    return fractieZetelPersonen;
+  };
+
+  const getFractieZetels = async () => {
+    let fractieZetel: FractieZetel[] = [];
+    fractieZetel = await getDataInDir("./data/fractieZetel");
+
+    fractieZetel = fractieZetel.filter(
+      (fractieZetel: FractieZetel) =>
+        fractieZetel.Id !== null && fractieZetel.Fractie_Id !== null
+    );
+
+    return fractieZetel;
+  };
+
+  const getFracties = async () => {
+    let fractie: Fractie[] = [];
+    fractie = await getDataInDir("./data/fractie");
+
+    fractie = fractie.filter(
+      (fractie: Fractie) =>
+        fractie.Id !== null &&
+        fractie.NaamNL !== null &&
+        fractie.Afkorting !== null
+    );
+
+    return fractie;
+  };
+
   const personen = await getPersonen();
   const persoonGeschenken = await getPersoonGeschenken();
   const persoonReizen = await getPersoonReizen();
   const persoonNevenFuncties = await getPersoonNevenFunctie();
   const persoonNevenFunctieInkomsten = await getPersoonNevenFunctieInkomsten();
+  const fracties = await getFracties();
+  const fractieZetels = await getFractieZetels();
+  const fractieZetelPersonen = await getFractieZetelPersonen();
 
   const resolvers = {
     Persoon: {
@@ -116,6 +162,12 @@ const init = async () => {
         return persoonNevenFuncties.filter(
           (persoonNevenFunctie: PersoonNevenFunctie) =>
             persoonNevenFunctie.PersoonId === persoon.Id
+        );
+      },
+      FractieZetelsPersoon(persoon: Persoon) {
+        return fractieZetelPersonen.filter(
+          (fractieZetelPersoon: FractieZetelPersoon) =>
+            fractieZetelPersoon.Persoon_Id === persoon.Id
         );
       },
     },
@@ -159,8 +211,22 @@ const init = async () => {
         );
       },
     },
+    FractieZetelPersoon: {
+      FractieZetel(fractieZetelPersoon: FractieZetelPersoon) {
+        return fractieZetels.find((fractieZetel: FractieZetel) => {
+          return fractieZetel.Id === fractieZetelPersoon.FractieZetel_Id;
+        });
+      },
+    },
+    FractieZetel: {
+      Fractie(fractieZetel: FractieZetel) {
+        return fracties.find((fractie: Fractie) => {
+          return fractie.Id === fractieZetel.Fractie_Id;
+        });
+      },
+    },
     Query: {
-      personen: (_, { id, geslacht, functie, fractielabel }) => {
+      personen: (_, { id, geslacht, functie }) => {
         let users = personen;
 
         if (id) {
@@ -173,12 +239,6 @@ const init = async () => {
 
         if (functie) {
           users = users.filter((user: Persoon) => user.Functie === functie);
-        }
-
-        if (fractielabel) {
-          users = users.filter(
-            (user: Persoon) => user.Fractielabel === fractielabel
-          );
         }
 
         return users;
@@ -195,6 +255,15 @@ const init = async () => {
       persoonNevenFunctieInkomsten: () => {
         return persoonNevenFunctieInkomsten;
       },
+      fracties: () => {
+        return fracties;
+      },
+      fractieZetels: () => {
+        return fractieZetels;
+      },
+      fractieZetelPersonen: () => {
+        return fractieZetelPersonen;
+      },
     },
   };
 
@@ -202,11 +271,6 @@ const init = async () => {
     typeDefs,
     resolvers,
   });
-
-  // Passing an ApolloServer instance to the `startStandaloneServer` function:
-  //  1. creates an Express app
-  //  2. installs your ApolloServer instance as middleware
-  //  3. prepares your app to handle incoming requests
 
   const { url } = await startStandaloneServer(server, {
     listen: { port: 4000 },
